@@ -2,6 +2,7 @@
 /build/
 /doc/
 /pkg/
+/vcpkg_installed/
 
 /res/data/
 /res/editor/settings.dat

@@ -11,6 +11,7 @@
 //#########################
 #include "engine/Piste.hpp"
 #include "engine/PFilesystem.hpp"
+#include "pk2_entry.hpp"
 #include "version.hpp"
 
 #include "screens/screens_handler.hpp"
@@ -35,9 +36,13 @@
 #include <ctime>
 
 #include <algorithm>
+#include <optional>
 #include <SDL.h>
 
 #include "episode/save_slots.hpp"
+
+static std::optional<std::string> override_assets_path;
+static std::optional<std::string> override_data_path;
 
 
 static void start_test(const char* arg) {
@@ -100,7 +105,18 @@ static void log_data() {
 
 }
 
+void pk2_set_paths(const std::string& assets_path, const std::string& data_path){
+	override_assets_path = assets_path;
+	override_data_path = data_path;
+}
+
 void pk2_init(){
+	if(override_assets_path.has_value()){
+		PFilesystem::SetAssetsPath(*override_assets_path);
+	}
+	if(override_data_path.has_value()){
+		PFilesystem::SetDataPath(*override_data_path);
+	}
 	PFilesystem::SetDefaultPaths();
 	PLog::Init(PLog::ALL, true, true);
 }
@@ -167,6 +183,7 @@ void pk2_main(bool _dev_mode, bool _show_fps, bool _test_level, const std::strin
 	quit();
 }
 
+#if !defined(UWP_BUILD)
 int main(int argc, char **argv) {
 
 	bool test_level = false;
@@ -338,3 +355,4 @@ int main(int argc, char **argv) {
 	
 	return 0;
 }
+#endif

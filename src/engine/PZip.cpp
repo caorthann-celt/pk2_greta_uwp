@@ -22,7 +22,7 @@ PZip::PZip(PZip&& pzip)
 }
 
 void PZip::open(const std::string& path){
-	SDL_RWops* rw = SDL_RWFromFile(path.c_str(), "r");
+	SDL_RWops* rw = SDL_RWFromFile(path.c_str(), "rb");
 	if (rw == NULL) {
         std::ostringstream os;
         os<<"Can't open \""<<path<<"\"";       

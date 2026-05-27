@@ -18,7 +18,7 @@ const char* URL_MAKYUNI = "https://sites.google.com/view/pekka-kana-fanpage/pekk
 
 #include <sstream>
 
-#ifdef _WIN32
+#if defined(_WIN32) && !defined(UWP_BUILD)
 #include <windows.h>
 #endif
 
@@ -30,7 +30,11 @@ const char* URL_MAKYUNI = "https://sites.google.com/view/pekka-kana-fanpage/pekk
 
 void OpenBrowser(const std::string& url){
     
-    #ifndef __ANDROID__
+    #if defined(UWP_BUILD)
+
+    PLog::Write(PLog::WARN, "OpenBrowser", "Opening browser links is disabled in the UWP port");
+
+    #elif !defined(__ANDROID__)
 
     std::ostringstream command;
 

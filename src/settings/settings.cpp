@@ -31,6 +31,12 @@ void Settings_Init() {
 
 	Settings.keyboardInput.setDefault();
 	Settings.joystickInput.setDefaultJoystick();
+	Settings.useJoystick = false;
+	Settings.useControllerVibrations = false;
+
+#ifdef UWP_BUILD
+	Settings.useJoystick = true;
+#endif
 
 #ifdef __ANDROID__
 	Settings.touchscreen_mode = true;

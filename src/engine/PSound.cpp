@@ -6,7 +6,11 @@
 
 #include "PLog.hpp"
 
+#if defined(UWP_BUILD)
+#include <SDL_mixer_ext.h>
+#else
 #include <SDL_mixer.h>
+#endif
 
 #include <cstring>
 #include <queue>

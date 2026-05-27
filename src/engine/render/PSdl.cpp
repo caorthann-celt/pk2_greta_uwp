@@ -12,6 +12,11 @@
 
 #include <stdexcept>
 
+#if defined(UWP_BUILD)
+#include <cstdio>
+#include <Windows.h>
+#endif
+
 void PSdl::load_ui_texture(void* surface) {
 
     ui_surface = (SDL_Surface*)surface;
@@ -45,7 +50,9 @@ void PSdl::clear_screen() {
 void PSdl::set_screen(PRender::FRECT screen_dst) {
 
     int w, h;
-    PRender::get_window_size(&w, &h);
+    if (SDL_GetRendererOutputSize(renderer, &w, &h) != 0) {
+        PRender::get_window_size(&w, &h);
+    }
 
     screen_dest.x = screen_dst.x * w;
     screen_dest.y = screen_dst.y * h;
@@ -165,6 +172,21 @@ PSdl::PSdl(int width, int height, void* window) {
 
     SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "2");
     SDL_RenderClear(renderer);
+
+#if defined(UWP_BUILD)
+    int window_w = 0;
+    int window_h = 0;
+    int output_w = 0;
+    int output_h = 0;
+    SDL_GetWindowSize(curr_window, &window_w, &window_h);
+    SDL_GetRendererOutputSize(renderer, &output_w, &output_h);
+
+    char debug[160];
+    std::snprintf(debug, sizeof(debug),
+        "[PK2-UWP]\tSDL window %dx%d, renderer output %dx%d\r\n",
+        window_w, window_h, output_w, output_h);
+    OutputDebugStringA(debug);
+#endif
 
 }
 
